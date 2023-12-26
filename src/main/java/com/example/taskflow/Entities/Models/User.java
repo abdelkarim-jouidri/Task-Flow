@@ -1,6 +1,7 @@
 package com.example.taskflow.Entities.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class User {
     @Id
     private UUID id;
-
+    @NotNull
     private String fistName;
     private String lastName;
     private String password;
