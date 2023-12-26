@@ -28,7 +28,7 @@ public class TaskController {
         try{
             TaskDTO taskDTO1 = taskDTO;
             TaskDTO savedTask = taskService.addTask(taskDTO);
-            ResponseDTO<TaskDTO> response = new ResponseDTO<TaskDTO>(taskDTO1, "saved");
+            ResponseDTO<TaskDTO> response = new ResponseDTO<TaskDTO>(savedTask, "saved");
             return response;
         }catch (Exception ex){
             ex.printStackTrace();
