@@ -3,15 +3,10 @@ package com.example.taskflow.Controllers;
 import com.example.taskflow.Entities.DTOs.Response.ResponseDTO;
 import com.example.taskflow.Entities.DTOs.Task.TaskDTO;
 import com.example.taskflow.Entities.Models.Task;
-import com.example.taskflow.Mappings.TaskMapper;
+import com.example.taskflow.Mappings.Mapper;
 import com.example.taskflow.Services.Impl.TaskServiceImpl;
-import com.example.taskflow.Services.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,9 +19,8 @@ public class TaskController {
 
 
     @PostMapping("/save")
-    public ResponseDTO<TaskDTO> AddTask( @RequestBody TaskDTO taskDTO){
+    public ResponseDTO<TaskDTO> AddTask( @Valid @RequestBody TaskDTO taskDTO){
         try{
-            TaskDTO taskDTO1 = taskDTO;
             TaskDTO savedTask = taskService.addTask(taskDTO);
             ResponseDTO<TaskDTO> response = new ResponseDTO<TaskDTO>(savedTask, "saved");
             return response;
@@ -43,7 +37,7 @@ public class TaskController {
 
     @PostMapping("/test")
     public ResponseDTO<Task> test(@RequestBody TaskDTO taskDTO){
-        Task task = TaskMapper.INSTANCE.taskDTOtoTask(taskDTO);
+        Task task = Mapper.INSTANCE.taskDTOtoTask(taskDTO);
         return new ResponseDTO<>(task, "data");
     }
 }

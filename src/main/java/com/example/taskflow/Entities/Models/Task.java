@@ -18,7 +18,7 @@ import java.util.Set;
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotEmpty(message = "the description shouldn't be empty")
     private String description;
     @Future
     private LocalDate createdAt;
@@ -33,4 +33,7 @@ public class Task {
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
     private Set<Tag> tags;
+
+    @ManyToOne
+    private User assignedUser;
 }

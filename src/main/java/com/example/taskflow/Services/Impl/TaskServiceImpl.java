@@ -2,7 +2,7 @@ package com.example.taskflow.Services.Impl;
 
 import com.example.taskflow.Entities.DTOs.Task.TaskDTO;
 import com.example.taskflow.Entities.Models.Task;
-import com.example.taskflow.Mappings.TaskMapper;
+import com.example.taskflow.Mappings.Mapper;
 import com.example.taskflow.Repositories.TaskRepository;
 import com.example.taskflow.Services.TaskService;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDTO addTask(TaskDTO taskDTO) {
-        Task task = TaskMapper.INSTANCE.taskDTOtoTask(taskDTO);
+        Task task = Mapper.INSTANCE.taskDTOtoTask(taskDTO);
         Task savedTasked = taskRepository.save(task);
-        return TaskMapper.INSTANCE.taskToTaskDTO(savedTasked);
+        return Mapper.INSTANCE.taskToTaskDTO(savedTasked);
     }
 }
