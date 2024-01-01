@@ -2,15 +2,13 @@ package com.example.taskflow.Entities.Models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 import java.util.UUID;
 
 @Entity @Table(name = "users")
+@Builder
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor
 public class User {
     @Id

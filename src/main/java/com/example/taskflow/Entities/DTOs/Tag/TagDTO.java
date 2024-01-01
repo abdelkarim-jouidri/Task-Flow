@@ -1,8 +1,11 @@
-package com.example.taskflow.Entities.DTOs.Tag;
+    package com.example.taskflow.Entities.DTOs.Tag;
 
-import jakarta.validation.constraints.NotEmpty;
+    import jakarta.validation.constraints.NotEmpty;
+    import lombok.Data;
 
-public class TagDTO {
-    @NotEmpty(message = "the name must not be empty")
-    private String name;
-}
+    @Data
+    public class TagDTO {
+        @NotEmpty(message = "the name must not be empty")
+        private String name;
+        private Integer id;
+    }

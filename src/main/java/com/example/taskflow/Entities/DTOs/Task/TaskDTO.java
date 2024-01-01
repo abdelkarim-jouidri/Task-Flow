@@ -1,9 +1,9 @@
 package com.example.taskflow.Entities.DTOs.Task;
 
 import com.example.taskflow.Entities.DTOs.Tag.TagDTO;
+import com.example.taskflow.Entities.DTOs.User.viewUserDTO;
 import com.example.taskflow.Entities.Enums.TaskStatus;
-import com.example.taskflow.Validations.MinimumOfThree;
-import com.example.taskflow.Validations.ValidDueDate;
+import com.example.taskflow.Validations.ValidStartDate;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -24,10 +24,15 @@ public class TaskDTO {
     private String description;
     @Future
     private LocalDate createdAt;
-    @ValidDueDate
+    @ValidStartDate
+    private LocalDate startDate;;
     private LocalDate dueDate;
     private TaskStatus taskStatus;
     @Size(min = 3 , message = "you should enter a minimum of 3 tags") @NotNull
     private Set<TagDTO> tags;
+    @NotNull
+    private viewUserDTO assignedBy;
+    @NotNull
+    private viewUserDTO assignedTo;
 
 }

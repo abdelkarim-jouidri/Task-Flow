@@ -3,7 +3,7 @@ package com.example.taskflow;
 import com.example.taskflow.Entities.DTOs.Task.TaskDTO;
 import com.example.taskflow.Entities.Enums.TaskStatus;
 import com.example.taskflow.Entities.Models.Task;
-import com.example.taskflow.Mappings.Mapper;
+import com.example.taskflow.Mappings.TaskMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -27,7 +27,7 @@ class TaskFlowApplicationTests {
 				createdAt(LocalDate.now()).
 				build();
 
-		Task mappedTask = Mapper.INSTANCE.taskDTOtoTask(taskDTO);
+		Task mappedTask = TaskMapper.INSTANCE.taskDTOtoTask(taskDTO);
 		assertThat(mappedTask).isNotNull();
 		assertThat(mappedTask.getDescription()).isNotEmpty();
 		assertThat(mappedTask.getTaskStatus()).isEqualTo(TaskStatus.TO_DO);

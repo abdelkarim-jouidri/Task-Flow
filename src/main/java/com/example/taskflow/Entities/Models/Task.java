@@ -1,7 +1,7 @@
 package com.example.taskflow.Entities.Models;
 
 import com.example.taskflow.Entities.Enums.TaskStatus;
-import com.example.taskflow.Validations.ValidDueDate;
+import com.example.taskflow.Validations.ValidStartDate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity @Table(name = "tasks")
@@ -22,7 +23,9 @@ public class Task {
     private String description;
     @Future
     private LocalDate createdAt;
-    @ValidDueDate
+    @ValidStartDate
+    private LocalDate startDate;
+
     private LocalDate dueDate;
 
     private TaskStatus taskStatus;
@@ -32,8 +35,12 @@ public class Task {
             joinColumns = {@JoinColumn(name = "task_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
-    private Set<Tag> tags;
+    private Set<Tag> tags ;
 
     @ManyToOne
-    private User assignedUser;
+    private User assignedTo;
+
+    @ManyToOne
+    private User assignedBy;
+
 }

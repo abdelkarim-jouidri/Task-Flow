@@ -9,8 +9,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = StartDateValidator.class)
 @Documented
-public @interface ValidDueDate {
-    String message() default "due date must be after the start date";
+public @interface ValidStartDate {
+    String message() default "start date must be 3 days or more from today's date";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

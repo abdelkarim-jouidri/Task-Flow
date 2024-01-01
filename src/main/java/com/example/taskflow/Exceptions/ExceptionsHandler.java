@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @RestControllerAdvice
@@ -34,13 +35,13 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        StringBuilder errorMsg = new StringBuilder("Validation Error : ");
+        StringBuilder errorMsg = new StringBuilder("Validation Error : \n");
         for (FieldError fieldError: fieldErrors){
             errorMsg.append("Field : '").
                     append(fieldError.getField()).
                     append("' : ").
                     append(fieldError.getDefaultMessage()).
-                    append(" ;");
+                    append(" ;\n");
         }
         return new ResponseEntity<>(errorMsg.toString(), HttpStatus.BAD_REQUEST);
     }
@@ -50,7 +51,7 @@ public class ExceptionsHandler {
         Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
         StringBuilder errorMsg = new StringBuilder();
         for (ConstraintViolation<?> constraintViolation : constraintViolations){
-            errorMsg.append("Validation Error : ").
+            errorMsg.append("Validation Error : \n").
                     append("'").
                     append(constraintViolation.getPropertyPath()).
                     append("' : ").
@@ -67,4 +68,15 @@ public class ExceptionsHandler {
     public ResponseEntity<String> handleSQLValidationException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NonAdminUserCannotAssignATaskException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NonAdminUserCannotAssignATaskException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
