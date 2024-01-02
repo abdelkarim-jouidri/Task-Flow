@@ -78,5 +78,9 @@ public class ExceptionsHandler {
     public ResponseEntity<String> handleNoSuchElementException(NonAdminUserCannotAssignATaskException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(NoTokenCreditException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoTokenCreditException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
 }

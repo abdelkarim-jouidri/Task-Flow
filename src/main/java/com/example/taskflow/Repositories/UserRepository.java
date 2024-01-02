@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findById(UUID uuid);
 
-    @Query("SELECT u FROM User u JOIN u.authorities r WHERE r.authority = 'ADMIN' AND u.id = :userId")
+    @Query("SELECT u FROM User u JOIN u.authorities r WHERE r.authority = 'MANAGER' AND u.id = :userId")
 
     User findUserWithRoleAdmin(@Param("userId") UUID userId);
 }

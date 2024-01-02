@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1704135764092-1" author="Youcode (generated)">
+        <dropColumn columnName="created_at" tableName="tasks"/>
+
+        <dropColumn columnName="due_date" tableName="tasks"/>
+
+        <dropColumn columnName="start_date" tableName="tasks"/>
+    </changeSet>
+    <changeSet id="1704135764092-2" author="Youcode (generated)">
+        <addColumn tableName="tasks">
+            <column name="created_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1704135764092-4" author="Youcode (generated)">
+        <addColumn tableName="tasks">
+            <column name="due_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1704135764092-6" author="Youcode (generated)">
+        <addColumn tableName="tasks">
+            <column name="start_date" type="DATETIME">
+                <constraints nullable="false" validateNullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1704135764092-7" author="Youcode (generated)">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="start_date" tableName="tasks" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

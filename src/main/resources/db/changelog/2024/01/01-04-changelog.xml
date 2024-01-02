@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1704145491160-1" author="Youcode (generated)">
+        <addColumn tableName="token">
+            <column name="created_at" type="DATETIME"/>
+            <column name="is_consumed" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1704145491160-2" author="Youcode (generated)">
+        <addColumn tableName="users">
+            <column name="daily_change_tokens" type="INT"/>
+            <column name="last_change_token_date" type="DATETIME"/>
+            <column name="last_deletion_token_date" type="DATETIME"/>
+            <column name="monthly_deletion_tokens" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1704145491160-3" author="Youcode (generated)">
+        <addNotNullConstraint columnDataType="INT" columnName="daily_change_tokens" tableName="users"/>
+    </changeSet>
+    <changeSet id="1704145491160-5" author="Youcode (generated)">
+        <addNotNullConstraint columnDataType="BOOLEAN" columnName="is_consumed" tableName="token"/>
+    </changeSet>
+    <changeSet id="1704145491160-9" author="Youcode (generated)">
+        <addNotNullConstraint columnDataType="INT" columnName="monthly_deletion_tokens" tableName="users"/>
+    </changeSet>
+    <changeSet id="1704145491160-10" author="Youcode (generated)">
+        <dropColumn columnName="expiration_date" tableName="token"/>
+    </changeSet>
+
+</databaseChangeLog>

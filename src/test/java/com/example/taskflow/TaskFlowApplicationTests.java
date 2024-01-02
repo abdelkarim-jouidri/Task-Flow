@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -23,8 +24,7 @@ class TaskFlowApplicationTests {
 		TaskDTO taskDTO = TaskDTO.builder().
 				taskStatus(TaskStatus.TO_DO).
 				description("lorem ipsum").
-				dueDate(LocalDate.now().plusDays(2)).
-				createdAt(LocalDate.now()).
+				dueDate(LocalDateTime.now().plusDays(2)).
 				build();
 
 		Task mappedTask = TaskMapper.INSTANCE.taskDTOtoTask(taskDTO);

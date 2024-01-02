@@ -35,6 +35,12 @@ public class UserController {
         }
     }
 
+    @GetMapping("/isAdmin")
+    public boolean isUserAdmin(UUID userId){
+        User userWithRoleAdmin = userRepository.findUserWithRoleAdmin(userId);
+        if (userWithRoleAdmin!=null) return true;
+        else return false;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO<List<User>>> getAll(){

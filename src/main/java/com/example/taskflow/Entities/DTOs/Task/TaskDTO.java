@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -22,11 +23,9 @@ import java.util.Set;
 public class TaskDTO {
     @NotEmpty
     private String description;
-    @Future
-    private LocalDate createdAt;
     @ValidStartDate
-    private LocalDate startDate;;
-    private LocalDate dueDate;
+    private LocalDateTime startDate;;
+    private LocalDateTime dueDate;
     private TaskStatus taskStatus;
     @Size(min = 3 , message = "you should enter a minimum of 3 tags") @NotNull
     private Set<TagDTO> tags;

@@ -8,11 +8,16 @@ import com.example.taskflow.Mappings.UserMapper;
 import com.example.taskflow.Repositories.RoleRepository;
 import com.example.taskflow.Repositories.UserRepository;
 import com.example.taskflow.Services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.time.DateUtils.isSameDay;
 
 @Service("userServiceImpl")
 @RequiredArgsConstructor
@@ -37,7 +42,13 @@ public class UserServiceImpl implements UserService {
         User userDTOtoUser = UserMapper.INSTANCE.createUserDTOtoUser(user);
         userDTOtoUser.setId(UUID.randomUUID());
         userDTOtoUser.setAuthorities(roles);
+        userDTOtoUser.setLastChangeTokenDate(LocalDateTime.now());
+        userDTOtoUser.setDailyChangeTokens(2);
+        userDTOtoUser.setMonthlyDeletionTokens(1);
+        userDTOtoUser.setLastDeletionTokenDate(LocalDateTime.now());
         User storedUser = userRepository.save(userDTOtoUser);
         return UserMapper.INSTANCE.userToViewUserDTO(storedUser);
     }
+
+
 }

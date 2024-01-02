@@ -2,21 +2,22 @@ package com.example.taskflow.Services.Impl;
 
 import com.example.taskflow.Entities.DTOs.Task.TaskDTO;
 import com.example.taskflow.Entities.Enums.TaskStatus;
+import com.example.taskflow.Entities.Models.Role;
 import com.example.taskflow.Entities.Models.Tag;
 import com.example.taskflow.Entities.Models.Task;
-import com.example.taskflow.Exceptions.CannotMarkATaskAsDoneException;
-import com.example.taskflow.Exceptions.DueDateIsInThePastException;
-import com.example.taskflow.Exceptions.InvalidDueDateException;
-import com.example.taskflow.Exceptions.NonAdminUserCannotAssignATaskException;
+import com.example.taskflow.Entities.Models.User;
+import com.example.taskflow.Exceptions.*;
 import com.example.taskflow.Mappings.TaskMapper;
+import com.example.taskflow.Repositories.RoleRepository;
 import com.example.taskflow.Repositories.TagRepository;
 import com.example.taskflow.Repositories.TaskRepository;
 import com.example.taskflow.Repositories.UserRepository;
 import com.example.taskflow.Services.TaskService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,11 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     @Override
     public TaskDTO addTask(TaskDTO taskDTO) {
-        LocalDate startDate = taskDTO.getStartDate();
-        LocalDate dueDate = taskDTO.getDueDate();
+        LocalDateTime startDate = taskDTO.getStartDate();
+        LocalDateTime dueDate = taskDTO.getDueDate();
         if(!dueDate.isAfter(startDate)){
             throw new InvalidDueDateException("Due date should be after the starting date");
         }
@@ -40,29 +42,64 @@ public class TaskServiceImpl implements TaskService {
                 throw new NoSuchElementException("no such tag for this id");
             }
         }
-        if(userRepository.findById(taskDTO.getAssignedBy().getId()).isEmpty()){
+        Optional<User> assignedByUser = userRepository.findById(taskDTO.getAssignedBy().getId());
+        if(assignedByUser.isEmpty()){
             throw new NoSuchElementException("No such assigned by user for this user id");
         }
-        if(userRepository.findUserWithRoleAdmin(taskDTO.getAssignedBy().getId())==null){
-            throw new NonAdminUserCannotAssignATaskException("Non admin user cannot assign a task");
-        }
-        if(userRepository.findById(taskDTO.getAssignedTo().getId()).isEmpty()){
+        Optional<User> assignedToUser = userRepository.findById(taskDTO.getAssignedTo().getId());
+        if(assignedToUser.isEmpty()){
             throw new NoSuchElementException("No such assigned to user for this user id");
+        }
+
+        if(!assignedToUser.get().getId().equals(assignedByUser.get().getId()) ){
+            if(userRepository.findUserWithRoleAdmin(assignedByUser.get().getId())==null){
+                throw new NonAdminUserCannotAssignATaskException("Only Managers can assign task to users    ");
+            }
         }
         Task task = TaskMapper.INSTANCE.taskDTOtoTask(taskDTO);
         Task savedTasked = taskRepository.save(task);
-
+        savedTasked.setCreatedAt(LocalDateTime.now());
         return TaskMapper.INSTANCE.taskToTaskDTO(savedTasked);
     }
 
     @Override
     public TaskDTO markTaskAsDone(Integer taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow();
-        if(task.getDueDate().isBefore(LocalDate.now())){
+        if(task.getDueDate().isBefore(LocalDateTime.now())){
             task.setTaskStatus(TaskStatus.DONE);
             Task savedTask = taskRepository.save(task);
             return TaskMapper.INSTANCE.taskToTaskDTO(savedTask);
         }
         throw new DueDateIsInThePastException();
     }
+
+    @Override
+    public void deleteTask(UUID userId, Integer taskId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with userId=" + userId + " not found"));
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task with taskId=" + taskId + " not found"));
+
+        Optional<Role> managerRole = roleRepository.findByAuthority("MANAGER");
+        if (managerRole.isEmpty()) throw new NoSuchElementException("The is no Role that has MANAGER authority");
+
+        if (!user.getAuthorities().contains(managerRole.get())) {
+            throw new UnauthorizedAccessException("Only managers can delete tasks.");
+        }
+
+        if (task.getAssignedTo().getId().equals(userId)) {
+            taskRepository.delete(task);
+        } else {
+            if (user.getMonthlyDeletionTokens() > 0) {
+                taskRepository.delete(task);
+                user.setMonthlyDeletionTokens(user.getMonthlyDeletionTokens() - 1);
+                userRepository.save(user);
+            } else {
+                throw new NoTokenCreditException("Monthly deletion token limit exceeded.");
+            }
+        }
+    }
+
+
 }

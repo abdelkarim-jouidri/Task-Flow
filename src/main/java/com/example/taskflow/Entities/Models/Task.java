@@ -5,12 +5,14 @@ import com.example.taskflow.Validations.ValidStartDate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,13 +24,15 @@ public class Task {
     @NotEmpty(message = "the description shouldn't be empty")
     private String description;
     @Future
-    private LocalDate createdAt;
-    @ValidStartDate
-    private LocalDate startDate;
+    private LocalDateTime createdAt;
+    @ValidStartDate @NotNull
+    private LocalDateTime startDate;
 
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
 
     private TaskStatus taskStatus;
+
+    private boolean isReplaced;
     @ManyToMany
     @JoinTable(
             name = "tasks_tags",

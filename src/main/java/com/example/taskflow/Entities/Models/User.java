@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +18,15 @@ public class User {
     private String fistName;
     private String lastName;
     private String password;
+
+    private int dailyChangeTokens;
+    private int monthlyDeletionTokens;
+
+    @Column(name = "last_change_token_date")
+    private LocalDateTime lastChangeTokenDate;
+
+    @Column(name = "last_deletion_token_date")
+    private LocalDateTime lastDeletionTokenDate;
 
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
