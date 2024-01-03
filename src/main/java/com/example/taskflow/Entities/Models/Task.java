@@ -1,6 +1,7 @@
 package com.example.taskflow.Entities.Models;
 
 import com.example.taskflow.Entities.Enums.TaskStatus;
+import com.example.taskflow.Validations.NotPastDate;
 import com.example.taskflow.Validations.ValidStartDate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -23,7 +24,6 @@ public class Task {
     private Integer id;
     @NotEmpty(message = "the description shouldn't be empty")
     private String description;
-    @Future
     private LocalDateTime createdAt;
     @ValidStartDate @NotNull
     private LocalDateTime startDate;
@@ -33,7 +33,7 @@ public class Task {
     private TaskStatus taskStatus;
 
     private boolean isReplaced;
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "tasks_tags",
             joinColumns = {@JoinColumn(name = "task_id")},
@@ -41,10 +41,10 @@ public class Task {
     )
     private Set<Tag> tags ;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.MERGE)
     private User assignedTo;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.MERGE)
     private User assignedBy;
 
 }

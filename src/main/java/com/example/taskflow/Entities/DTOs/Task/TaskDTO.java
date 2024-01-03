@@ -21,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor @NoArgsConstructor
 @Builder
 public class TaskDTO {
+    private Integer id;
     @NotEmpty
     private String description;
     @ValidStartDate
@@ -31,7 +32,6 @@ public class TaskDTO {
     private Set<TagDTO> tags;
     @NotNull
     private viewUserDTO assignedBy;
-    @NotNull
     private viewUserDTO assignedTo;
 
 }

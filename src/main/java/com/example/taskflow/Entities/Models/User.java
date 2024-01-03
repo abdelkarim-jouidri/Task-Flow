@@ -36,4 +36,7 @@ public class User {
     )
     private Set<Role> authorities;
 
+    @OneToMany
+    private Set<Task> tasks;
+
 }

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,17 +36,18 @@ public class UserController {
         }
     }
 
-    @GetMapping("/isAdmin")
-    public boolean isUserAdmin(UUID userId){
-        User userWithRoleAdmin = userRepository.findUserWithRoleAdmin(userId);
-        if (userWithRoleAdmin!=null) return true;
-        else return false;
-    }
 
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO<List<User>>> getAll(){
         List<User> all = userRepository.findAll();
         ResponseDTO response = new ResponseDTO(all, "data");
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public User userWithMinimumTasks(){
+        Optional<User> userWithMinNumberOfTasks = userRepository.findUserWithMinNumberOfTasks();
+        if(userWithMinNumberOfTasks.isEmpty()) return null;
+        return userWithMinNumberOfTasks.get();
     }
 }

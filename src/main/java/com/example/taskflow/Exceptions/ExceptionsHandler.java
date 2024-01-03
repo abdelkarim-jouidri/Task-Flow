@@ -65,7 +65,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleSQLValidationException(Exception ex){
+    public ResponseEntity<String> handleSQLValidationException(SQLException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -75,11 +75,21 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(NonAdminUserCannotAssignATaskException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NonAdminUserCannotAssignATaskException e){
+    public ResponseEntity<String> handleNonAdminUserCannotAssignATaskException(NonAdminUserCannotAssignATaskException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NoTokenCreditException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NoTokenCreditException e){
+    public ResponseEntity<String> handleNoTokenCreditException(NoTokenCreditException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CannotReplaceTaskException.class)
+    public ResponseEntity<String> handleCannotReplaceTaskException(CannotReplaceTaskException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IncorrectTokenTypeException.class)
+    public ResponseEntity<String> handleIncorrectTokenTypeException(IncorrectTokenTypeException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

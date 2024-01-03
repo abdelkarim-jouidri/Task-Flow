@@ -1,5 +1,5 @@
 package com.example.taskflow.Entities.Enums;
 
 public enum TaskStatus {
-    DOING, DONE, TO_DO
+    DOING, DONE, TO_DO, NOT_DONE
 }

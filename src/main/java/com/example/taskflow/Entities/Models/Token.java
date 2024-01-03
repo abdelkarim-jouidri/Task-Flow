@@ -18,6 +18,11 @@ public class Token {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne (cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "task_id", nullable = true)
+
+    private Task task;
+
     @Enumerated(EnumType.STRING)
     private TokenType type;
 
