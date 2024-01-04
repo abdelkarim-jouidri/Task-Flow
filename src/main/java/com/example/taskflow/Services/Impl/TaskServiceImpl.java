@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTO markTaskAsDone(Integer taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow();
-        if(task.getDueDate().isBefore(LocalDateTime.now())){
+        if(!task.getDueDate().isBefore(LocalDateTime.now())){
             task.setTaskStatus(TaskStatus.DONE);
             Task savedTask = taskRepository.save(task);
             return TaskMapper.INSTANCE.taskToTaskDTO(savedTask);
@@ -142,21 +142,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(UUID managerId, Integer taskId) {
-        User user = userRepository.findById(managerId)
-                .orElseThrow(() -> new EntityNotFoundException("User with userId=" + managerId + " not found"));
+    public void deleteTask(UUID userId, Integer taskId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with userId=" + userId + " not found"));
 
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task with taskId=" + taskId + " not found"));
 
-        Optional<Role> managerRole = roleRepository.findByAuthority("MANAGER");
-        if (managerRole.isEmpty()) throw new NoSuchElementException("There is no Role that has MANAGER authority");
-
-        if (!user.getAuthorities().contains(managerRole.get())) {
-            throw new UnauthorizedAccessException("Only managers can delete tasks.");
+        if (!task.getAssignedTo().equals(task.getAssignedBy())){
+            userRepository.
+                    findUserWithRoleAdmin(userId).
+                    orElseThrow(()->new UnauthorizedAccessException("Only managers can delete tasks."));
         }
-
+        task.getTags().clear();
         taskRepository.delete(task);
+
+
 
     }
 
@@ -165,7 +166,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAll().stream().map(taskMapper::taskToTaskDTO).collect(Collectors.toList());
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // Run every day at midnight
+    @Scheduled(cron = "0 * * * * *") // Run every minute
     public void updateTaskStatus() {
         List<Task> overdueTasks = taskRepository.findOverdueTasks();
 
@@ -175,8 +176,10 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // Run every day at midnight
+    @Scheduled(cron = "0 0 0 0 * *") // Run every month
     public void grantDoubleChangeTokens() {
+
+
         List<Token> nonConsumedTokens = tokenRepository.getTokensByConsumedIsFalse();
 
         for (Token token : nonConsumedTokens) {
@@ -185,7 +188,7 @@ public class TaskServiceImpl implements TaskService {
             if (createdAt != null &&
                     Duration.between(createdAt, LocalDateTime.now()).toHours() >= 12) {
                 User user = token.getUser();
-                user.setDailyChangeTokens(4);
+                user.setDailyChangeTokens(user.getDailyChangeTokens()*2);
                 userRepository.save(user);
             }
         }

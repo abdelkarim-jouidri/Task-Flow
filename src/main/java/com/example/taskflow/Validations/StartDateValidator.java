@@ -16,7 +16,8 @@ public class StartDateValidator implements ConstraintValidator<ValidStartDate, L
 
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime minimumStartDate = currentDate.plus(3, ChronoUnit.DAYS);
-
-        return startDate.isAfter(minimumStartDate) || startDate.isEqual(minimumStartDate);
+//        currentdate<=startDate<=minu
+//        return startDate.isAfter(minimumStartDate) || startDate.isEqual(minimumStartDate);
+        return startDate.isBefore(minimumStartDate) && startDate.isAfter(currentDate);
     }
 }

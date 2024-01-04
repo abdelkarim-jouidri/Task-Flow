@@ -1,6 +1,7 @@
 package com.example.taskflow.Controllers;
 
 import com.example.taskflow.Entities.DTOs.Request.changeTaskDTO;
+import com.example.taskflow.Entities.DTOs.Request.deleteTaskDTO;
 import com.example.taskflow.Entities.DTOs.Response.ResponseDTO;
 import com.example.taskflow.Entities.DTOs.Task.TaskDTO;
 import com.example.taskflow.Entities.Models.Task;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +33,7 @@ public class TaskController {
             ResponseDTO<TaskDTO> response = new ResponseDTO<TaskDTO>(savedTask, "saved");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch (Exception ex){
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -44,6 +45,7 @@ public class TaskController {
             ResponseDTO<TaskDTO> response = new ResponseDTO<>(updatedTask, "updated task");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch (Exception ex){
+            ex.printStackTrace();
             throw ex;
         }
     }
@@ -95,5 +97,17 @@ public class TaskController {
     @GetMapping("/overdue_tasks")
     public List<Task> overdueTasks(){
        return taskRepository.findOverdueTasks();
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDTO<?>> deleteTask(@Valid @RequestBody deleteTaskDTO deleteTaskDTO){
+        try {
+            taskService.deleteTask(deleteTaskDTO.getUserId(), deleteTaskDTO.getTaskId());
+            ResponseDTO<?> responseDTO = new ResponseDTO<>(null, "Deleted Successfully");
+            return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
+        }catch (Exception ex){
+            throw ex;
+        }
+
     }
 }

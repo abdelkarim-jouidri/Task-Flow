@@ -25,11 +25,12 @@ public class Task {
     @NotEmpty(message = "the description shouldn't be empty")
     private String description;
     private LocalDateTime createdAt;
-    @ValidStartDate @NotNull
+//    @ValidStartDate @NotNull
     private LocalDateTime startDate;
 
     private LocalDateTime dueDate;
 
+//    @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 
     private boolean isReplaced;
